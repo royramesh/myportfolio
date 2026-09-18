@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        orbitron: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            cyan: '#0ff',
+                            magenta: '#f0f',
+                            lime: '#0f0',
+                            dark: '#0a0a0a',
+                            panel: '#151515'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 10px #0ff, 0 0 20px #0ff',
+                        'neon-magenta': '0 0 10px #f0f, 0 0 20px #f0f',
+                        'neon-lime': '0 0 10px #0f0, 0 0 20px #0f0',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --grid-color: rgba(0, 255, 255, 0.1);
+            --bg-color: #050505;
+            --text-main: #e0e0e0;
+            --text-heading: #ffffff;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --card-border: rgba(0, 255, 255, 0.2);
+            --nav-bg: rgba(0, 0, 0, 0.85);
+            --neon-cyan-color: #0ff;
+            --neon-magenta-color: #f0f;
+            --neon-lime-color: #0f0;
+        }
+
+        /* Light Theme Cyber Override Variables */
+        body.light-theme {
+            --grid-color: rgba(2, 132, 199, 0.15);
+            --bg-color: #f1f5f9;
+            --text-main: #1e293b;
+            --text-heading: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --card-border: rgba(2, 132, 199, 0.3);
+            --nav-bg: rgba(241, 245, 249, 0.9);
+            --neon-cyan-color: #0284c7;
+            --neon-magenta-color: #c026d3;
+            --neon-lime-color: #059669;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Responsive text and element overrides for Light Mode */
+        body.light-theme .text-white { color: var(--text-heading) !important; }
+        body.light-theme .text-gray-300 { color: #334155 !important; }
+        body.light-theme .text-gray-400 { color: #475569 !important; }
+        body.light-theme .text-gray-500 { color: #64748b !important; }
+        body.light-theme .bg-black\/80,
+        body.light-theme .bg-black\/95,
+        body.light-theme .bg-black\/50 {
+            background-color: var(--nav-bg) !important;
+        }
+        body.light-theme .bg-neon-panel {
+            background-color: #ffffff !important;
+        }
+        body.light-theme .bg-gray-900 {
+            background-color: #e2e8f0 !important;
+        }
+        body.light-theme .text-neon-cyan { color: var(--neon-cyan-color) !important; }
+        body.light-theme .text-neon-magenta { color: var(--neon-magenta-color) !important; }
+        body.light-theme .text-neon-lime { color: var(--neon-lime-color) !important; }
+        body.light-theme .border-neon-cyan\/30, 
+        body.light-theme .border-neon-cyan { border-color: var(--neon-cyan-color) !important; }
+        body.light-theme .border-neon-magenta\/30,
+        body.light-theme .border-neon-magenta { border-color: var(--neon-magenta-color) !important; }
+        body.light-theme .border-neon-lime\/30,
+        body.light-theme .border-neon-lime { border-color: var(--neon-lime-color) !important; }
+
+        /* Animated Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200vw;
+            height: 200vh;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 20s linear infinite;
+            transition: background-image 0.4s ease;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
+        }
+
+        /* Glowing Text Effect */
+        .text-glow-cyan {
+            text-shadow: 0 0 5px var(--neon-cyan-color);
+        }
+        .text-glow-magenta {
+            text-shadow: 0 0 5px var(--neon-magenta-color);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-magenta-color);
+        }
+
+        /* Card Hover Effects */
+        .cyber-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transform: skewX(-20deg);
+            transition: all 0.5s ease;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--neon-cyan-color);
+            box-shadow: 0 0 15px var(--neon-cyan-color);
+            transform: translateY(-5px);
+        }
+
+        .cyber-card:hover::before {
+            left: 150%;
+        }
+
+        /* Glitch effect for main heading */
+        .glitch {
+            position: relative;
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 blue;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 86px, 0); }
+            20% { clip: rect(48px, 9999px, 60px, 0); }
+            40% { clip: rect(98px, 9999px, 12px, 0); }
+            60% { clip: rect(10px, 9999px, 88px, 0); }
+            80% { clip: rect(83px, 9999px, 98px, 0); }
+            100% { clip: rect(17px, 9999px, 94px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(33px, 9999px, 20px, 0); }
+            40% { clip: rect(2px, 9999px, 78px, 0); }
+            60% { clip: rect(49px, 9999px, 16px, 0); }
+            80% { clip: rect(89px, 9999px, 32px, 0); }
+            100% { clip: rect(31px, 9999px, 55px, 0); }
+        }
+
+        /* Utility for centering sections */
+        section {
+            min-height: 100vh;
+            padding-top: 5rem;
+            padding-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Sequence Diagram Animation Styles */
+        .mcp-step-row {
+            transition: all 0.3s ease;
+            opacity: 0.45;
+            filter: grayscale(70%);
+        }
+        .mcp-step-row.active {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.01);
+            border-color: var(--neon-cyan-color) !important;
+            background-color: rgba(0, 255, 255, 0.08);
+        }
+        
+        .pulse-beam {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, transparent);
+            box-shadow: 0 0 8px #0ff;
+            animation: beamPulse 1.5s infinite linear;
+        }
+
+        @keyframes beamPulse {
+            0% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0.3; transform: scaleX(0.8); }
+        }
+
+        body.light-theme .mcp-step-row.active {
+            background-color: rgba(2, 132, 199, 0.08) !important;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon-cyan selection:text-black relative">
+
+    <!-- Background Animation -->
+    <div class="grid-bg fixed inset-0 pointer-events-none"></div>
+
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-neon-cyan/30 py-4 px-6 md:px-12 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-orbitron font-bold text-white tracking-widest hover:text-neon-cyan transition-colors">
+                RAMESH<span class="text-neon-cyan">.</span>ROY
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 font-orbitron text-sm items-center">
+                <a href="#about" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">ABOUT</a>
+                <a href="#mcp-architecture" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">MCP ARCHITECTURE</a>
+                <a href="#education" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">EDUCATION</a>
+                <a href="#skills" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">SKILLS</a>
+                <a href="#projects" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">PROJECTS</a>
+                <a href="#contact" class="text-gray-300 hover:text-neon-cyan hover:text-glow-cyan transition-all">CONTACT</a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="flex items-center space-x-2 px-3 py-1.5 rounded border border-neon-cyan/50 text-neon-cyan hover:bg-neon-cyan/10 transition-all font-mono text-xs focus:outline-none" aria-label="Toggle Theme">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                    <span id="theme-text">SYS.DARK</span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-neon-cyan focus:outline-none" id="mobile-menu-btn">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden absolute top-full left-0 w-full bg-black/95 border-b border-neon-cyan/30 flex-col items-center py-4 space-y-4 font-orbitron" id="mobile-menu">
+            <a href="#about" class="text-gray-300 hover:text-neon-cyan mobile-link">ABOUT</a>
+            <a href="#mcp-architecture" class="text-gray-300 hover:text-neon-cyan mobile-link">MCP ARCHITECTURE</a>
+            <a href="#education" class="text-gray-300 hover:text-neon-cyan mobile-link">EDUCATION</a>
+            <a href="#skills" class="text-gray-300 hover:text-neon-cyan mobile-link">SKILLS</a>
+            <a href="#projects" class="text-gray-300 hover:text-neon-cyan mobile-link">PROJECTS</a>
+            <a href="#contact" class="text-gray-300 hover:text-neon-cyan mobile-link">CONTACT</a>
+            <button id="mobile-theme-toggle" class="flex items-center space-x-2 px-4 py-2 rounded border border-neon-cyan/50 text-neon-cyan font-mono text-xs" aria-label="Toggle Theme Mobile">
+                <i id="mobile-theme-icon" class="fas fa-moon"></i>
+                <span id="mobile-theme-text">MODE: DARK</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+
+        <section id="hero" class="relative">
+            <div class="flex flex-col justify-center items-start h-full">
+                <div class="inline-block px-3 py-1 mb-6 border border-neon-lime text-neon-lime text-xs font-orbitron tracking-widest rounded-full uppercase bg-neon-lime/10">
+                    System Online // Agentic AI Developer @ Accenture
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black text-white mb-4 tracking-tighter uppercase glitch" data-text="Ramesh Roy">
+                    Ramesh Roy
+                </h1>
+                <h2 class="text-2xl md:text-4xl font-orbitron text-neon-cyan mb-6 font-bold tracking-wide">
+                    Agentic AI Engineer / LangGraph, MCP & RAG Specialist
+                </h2>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl font-light leading-relaxed mb-10">
+                    Architecting enterprise-grade AI solutions using Python, LangGraph, Model Context Protocol (MCP), RAG, and Vector Databases (Quesar++). Transforming IT Service Management (ITSM) through automated audit workflows, multi-agent orchestration, and intelligent Root Cause Analysis.
+                </p>
+                <div class="flex flex-wrap gap-4 font-orbitron">
+                    <a href="#projects" class="px-8 py-3 bg-neon-cyan/10 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold tracking-wider">
+                        INITIATE_PROTOCOL(PROJECTS)
+                    </a>
+                    <a href="#mcp-architecture" class="px-8 py-3 border border-neon-magenta text-neon-magenta hover:bg-neon-magenta/10 hover:shadow-neon-magenta transition-all duration-300 font-bold tracking-wider">
+                        EXPLORE_MCP_FLOW()
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Decorative Terminal Element -->
+            <div class="absolute bottom-10 right-0 hidden lg:block opacity-50 text-xs font-mono text-neon-lime">
+                > Initializing LangGraph agents & MCP Protocol... [OK]<br>
+                > Connecting Quesar++ Vector DB... [OK]<br>
+                > Deploying Ticket & RCA Audit Agents... [OK]<br>
+                > Ready for enterprise AI execution. _
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="w-full">
+                <div class="flex items-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-orbitron font-bold text-white uppercase"><span class="text-neon-cyan">01.</span> Profile_Data</h2>
+                    <div class="h-px bg-gray-700 flex-grow ml-6"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                        <p>
+                            I am an <span class="text-neon-cyan font-semibold">Agentic AI Engineer at Accenture</span> (Packaged App Development Associate), dedicated to designing and building enterprise-grade AI solutions that automate complex IT Service Management (ITSM) operational workflows.
+                        </p>
+                        <p>
+                            My core expertise lies in developing multi-agent architectures using <span class="text-white font-mono">Python, LangGraph, LangChain, Model Context Protocol (MCP), FastAPI, and RAG</span>. I specialize in integrating high-precision semantic search using vector databases like <span class="text-neon-lime font-mono">Quesar++</span>, prompt engineering, and response validation with hallucination mitigation techniques.
+                        </p>
+                        <p>
+                            At Accenture, I engineered autonomous Ticket, Problem, and Change Audit Agents utilizing enterprise scheduling platforms (<span class="text-gray-200">Agent Manager, GenWizard WFM, Enterprise Orchestrator</span>), achieving <span class="text-neon-lime font-semibold">100% automation of manual ITSM audit validations</span> and drastically cutting turnaround times.
+                        </p>
+                    </div>
+                    
+                    <!-- Widget 1: Dynamic Multi-Agent Swarm Orchestrator -->
+                    <div class="w-full max-w-xl mx-auto flex flex-col p-2">
+                        <div class="w-full bg-black/90 rounded-2xl border border-neon-cyan/50 p-5 shadow-neon-cyan relative overflow-hidden backdrop-blur-md flex flex-col space-y-4">
+                            
+                            <!-- Header Bar & View Switcher -->
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-neon-cyan/30 pb-3 gap-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="relative flex h-2.5 w-2.5">
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-lime opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-neon-lime"></span>
+                                    </span>
+                                    <span class="font-orbitron text-xs font-bold text-white tracking-wider">MULTI-AGENT SWARM ORCHESTRATOR</span>
+                                </div>
+                                
+                                <!-- View Switcher -->
+                                <div class="flex space-x-1 bg-gray-900/80 p-1 rounded border border-neon-cyan/30 font-mono text-[10px]">
+                                    <button id="tab-btn-swarm" onclick="switchAgentTab('swarm')" class="px-2.5 py-1 rounded bg-neon-cyan text-black font-bold transition-all">SWARM MATRIX</button>
+                                    <button id="tab-btn-stream" onclick="switchAgentTab('stream')" class="px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all">LOG STREAM</button>
+                                </div>
+                            </div>
+
+                            <!-- Live Task Target Banner -->
+                            <div class="bg-gray-950 p-2.5 rounded border border-neon-cyan/30 flex items-center justify-between font-mono text-[11px]">
+                                <div class="flex items-center space-x-2 truncate">
+                                    <i class="fas fa-microchip text-neon-cyan"></i>
+                                    <span class="text-gray-400">TARGET TASK:</span>
+                                    <span class="text-neon-lime font-bold truncate">[INC-9042] Auto-RCA & Remediate</span>
+                                </div>
+                                <span class="text-[9px] px-2 py-0.5 rounded bg-neon-lime/20 text-neon-lime font-bold animate-pulse" id="swarm-state-badge">SWARM ACTIVE</span>
+                            </div>
+
+                            <!-- TAB 1: Multi-Agent Collaborative Swarm Grid -->
+                            <div id="agent-tab-swarm" class="flex flex-col space-y-3">
+                                <!-- 5 Collaborative Agent Cards Grid -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="swarm-grid-container">
+                                    <!-- Dynamic Agent Cards Rendered by JS -->
+                                </div>
+
+                                <!-- Live Payload Telemetry Box -->
+                                <div class="bg-gray-950 p-3 rounded border border-neon-cyan/30 flex flex-col space-y-1 font-mono text-[10px]">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-neon-cyan font-bold" id="agent-active-title">Supervisor Agent (LangGraph)</span>
+                                        <span class="text-gray-500 text-[9px]" id="agent-active-step">STEP 1 OF 5</span>
+                                    </div>
+                                    <p class="text-gray-300 text-[10px] leading-tight" id="agent-active-detail">
+                                        Ingesting ITSM Ticket #INC-9042. Parsing error logs and delegating tasks to multi-agent swarm.
+                                    </p>
+                                    <div class="text-[9px] text-neon-lime pt-1 border-t border-gray-800 flex items-center gap-1">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span id="agent-active-output">Output: Delegated parallel tasks to Context & Audit Agents</span>
+                                    </div>
+                                </div>
+
+                                <!-- Workflow Navigation & Playback Controls -->
+                                <div class="flex justify-between items-center pt-1 font-mono text-xs">
+                                    <div class="flex space-x-2">
+                                        <button onclick="toggleAgentPlay()" id="agent-play-btn" class="px-3 py-1 bg-neon-cyan/20 border border-neon-cyan text-neon-cyan rounded hover:bg-neon-cyan hover:text-black transition-colors font-bold text-[10px] flex items-center gap-1">
+                                            <i class="fas fa-pause" id="agent-play-icon"></i> <span id="agent-play-text">PAUSE</span>
+                                        </button>
+                                        <button onclick="stepAgentNext()" class="px-2 py-1 bg-gray-800 border border-gray-700 text-gray-300 rounded hover:border-neon-cyan hover:text-white transition-colors text-[10px]">
+                                            <i class="fas fa-step-forward"></i> STEP
+                                        </button>
+                                        <button onclick="resetAgentSwarm()" class="px-2 py-1 bg-gray-800 border border-gray-700 text-gray-300 rounded hover:border-neon-magenta hover:text-white transition-colors text-[10px]">
+                                            <i class="fas fa-redo"></i> RESTART
+                                        </button>
+                                    </div>
+                                    <span class="text-[9px] text-gray-400 font-bold" id="agent-step-counter">PROGRESS: 20%</span>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2: Live Sequential Log Stream -->
+                            <div id="agent-tab-stream" class="hidden flex-col space-y-2 font-mono text-[10px]">
+                                <div class="space-y-1.5 max-h-[230px] overflow-y-auto pr-1 select-none" id="agent-stream-container">
+                                    <!-- Dynamic stream entries rendered by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Footer Status Telemetry -->
+                            <div class="border-t border-neon-cyan/20 pt-2 flex justify-between items-center font-mono text-[9px] text-gray-400">
+                                <div>FRAMEWORK: <span class="text-neon-cyan font-bold">LANGGRAPH</span></div>
+                                <div>PROTOCOL: <span class="text-neon-magenta font-bold">MCP READY</span></div>
+                                <div>NODES: <span class="text-neon-lime font-bold">5 ONLINE</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Widget 2: Model Context Protocol (MCP) Sequence Engine Section -->
+        <section id="mcp-architecture">
+            <div class="w-full">
+                <div class="flex items-center mb-8">
+                    <h2 class="text-3xl md:text-5xl font-orbitron font-bold text-white uppercase"><span class="text-neon-magenta">02.</span> MCP_Sequence_Engine</h2>
+                    <div class="h-px bg-gray-700 flex-grow ml-6"></div>
+                </div>
+                <p class="text-gray-300 text-base max-w-3xl mb-8">
+                    Model Context Protocol (MCP) establishes a standardized JSON-RPC communication bridge between host AI clients, tool servers, vector databases (Quesar++), and enterprise ITSM systems. Experience the live RPC sequence payload execution below:
+                </p>
+
+                <!-- Model Context Protocol Interactive Sequence Diagram -->
+                <div class="cyber-card p-6 rounded-2xl border border-neon-magenta/50 shadow-neon-magenta">
+                    
+                    <!-- Diagram Columns (Participants) -->
+                    <div class="grid grid-cols-4 gap-2 mb-6 text-center font-orbitron text-xs font-bold border-b border-gray-800 pb-4">
+                        <div class="p-3 bg-black/60 rounded border border-neon-cyan text-neon-cyan">
+                            <i class="fas fa-desktop text-base mb-1 block"></i> MCP CLIENT
+                            <span class="block text-[9px] font-mono text-gray-400 font-normal">ITSM Portal / GenWizard</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded border border-neon-magenta text-neon-magenta">
+                            <i class="fas fa-server text-base mb-1 block"></i> MCP HOST
+                            <span class="block text-[9px] font-mono text-gray-400 font-normal">LangGraph Orchestrator</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded border border-neon-lime text-neon-lime">
+                            <i class="fas fa-plug text-base mb-1 block"></i> MCP TOOLS
+                            <span class="block text-[9px] font-mono text-gray-400 font-normal">Quesar++ & Guardrails</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded border border-yellow-400 text-yellow-400">
+                            <i class="fas fa-database text-base mb-1 block"></i> EXECUTION
+                            <span class="block text-[9px] font-mono text-gray-400 font-normal">ServiceNow & Enterprise API</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Sequence Rows -->
+                    <div class="space-y-3 font-mono text-xs" id="mcp-sequence-container">
+                        
+                        <!-- Step 1 -->
+                        <div class="mcp-step-row p-3 rounded border border-gray-800 flex justify-between items-center bg-black/40" id="mcp-step-1">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-0.5 rounded bg-neon-cyan/20 text-neon-cyan font-bold text-[10px]">REQ 1</span>
+                                <div>
+                                    <div class="font-bold text-white">Client &rarr; MCP Host: <span class="text-neon-cyan">initialize()</span></div>
+                                    <div class="text-[10px] text-gray-400">Handshake & capability exchange protocol established.</div>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neon-cyan">JSON-RPC 2.0</span>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="mcp-step-row p-3 rounded border border-gray-800 flex justify-between items-center bg-black/40" id="mcp-step-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-0.5 rounded bg-neon-magenta/20 text-neon-magenta font-bold text-[10px]">TOOL 2</span>
+                                <div>
+                                    <div class="font-bold text-white">MCP Host &rarr; MCP Server: <span class="text-neon-magenta">tools/call("quesar_vector_search")</span></div>
+                                    <div class="text-[10px] text-gray-400">Queries Quesar++ Vector DB for Incident #INC-9042 contextual embeddings.</div>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neon-magenta">Quesar++ RAG</span>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="mcp-step-row p-3 rounded border border-gray-800 flex justify-between items-center bg-black/40" id="mcp-step-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-0.5 rounded bg-neon-lime/20 text-neon-lime font-bold text-[10px]">VAL 3</span>
+                                <div>
+                                    <div class="font-bold text-white">MCP Server &rarr; Guardrails Engine: <span class="text-neon-lime">validate_schema()</span></div>
+                                    <div class="text-[10px] text-gray-400">Verifies zero-hallucination compliance and response bounds.</div>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neon-lime">Passed (100%)</span>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="mcp-step-row p-3 rounded border border-gray-800 flex justify-between items-center bg-black/40" id="mcp-step-4">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-400 font-bold text-[10px]">EXEC 4</span>
+                                <div>
+                                    <div class="font-bold text-white">MCP Host &rarr; Target System: <span class="text-yellow-400">execute_remediation()</span></div>
+                                    <div class="text-[10px] text-gray-400">Dispatches API trigger via Enterprise Orchestrator. Ticket closed.</div>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-yellow-400">Completed (200 OK)</span>
+                        </div>
+
+                    </div>
+
+                    <!-- MCP Player Controls Bar -->
+                    <div class="mt-6 border-t border-gray-800 pt-4 flex flex-col sm:flex-row justify-between items-center font-mono text-xs gap-3">
+                        <div class="flex space-x-2">
+                            <button onclick="toggleMcpPlay()" id="mcp-play-btn" class="px-4 py-1.5 bg-neon-magenta/20 border border-neon-magenta text-neon-magenta rounded hover:bg-neon-magenta hover:text-black transition-colors font-bold text-xs flex items-center gap-1.5">
+                                <i class="fas fa-pause" id="mcp-play-icon"></i> <span id="mcp-play-text">PAUSE MCP SEQUENCE</span>
+                            </button>
+                            <button onclick="stepMcpNext()" class="px-3 py-1.5 bg-gray-800 border border-gray-700 text-gray-300 rounded hover:border-neon-magenta hover:text-white transition-colors text-xs">
+                                <i class="fas fa-step-forward"></i> STEP
+                            </button>
+                        </div>
+                        <div class="text-[11px] text-gray-400">
+                            CURRENT PROTOCOL STEP: <span class="text-neon-cyan font-bold" id="mcp-step-counter">1 OF 4</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="education">
+            <div class="w-full">
+                <div class="flex items-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-orbitron font-bold text-white uppercase"><span class="text-neon-magenta">03.</span> Training_Data</h2>
+                    <div class="h-px bg-gray-700 flex-grow ml-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <!-- Academic Education -->
+                    <div>
+                        <h3 class="text-2xl font-orbitron text-neon-magenta mb-6 flex items-center">
+                            <i class="fas fa-graduation-cap mr-3"></i> Academic Base
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="cyber-card p-6 rounded-lg relative pl-8">
+                                <!-- Timeline dot -->
+                                <div class="absolute left-0 top-0 h-full w-1 bg-neon-magenta/20"></div>
+                                <div class="absolute left-[-4px] top-8 h-3 w-3 rounded-full bg-neon-magenta shadow-[0_0_10px_#f0f]"></div>
+                                
+                                <h4 class="text-xl font-bold text-white font-orbitron">Master of Computer Applications (MCA)</h4>
+                                <div class="text-neon-cyan font-mono text-sm mb-1">IGNOU // Pursuing</div>
+                                <div class="text-gray-400 font-mono text-xs mb-2">2025 – 2027</div>
+                                <p class="text-gray-400 text-sm">Advanced computer science coursework focusing on enterprise software systems, artificial intelligence, and cloud integration.</p>
+                            </div>
+
+                            <div class="cyber-card p-6 rounded-lg relative pl-8">
+                                <div class="absolute left-0 top-0 h-full w-1 bg-neon-magenta/20"></div>
+                                <div class="absolute left-[-4px] top-8 h-3 w-3 rounded-full bg-gray-600"></div>
+                                
+                                <h4 class="text-xl font-bold text-white font-orbitron">Bachelor of Computer Applications (BCA)</h4>
+                                <div class="text-gray-300 font-mono text-sm mb-1">MAKAUT</div>
+                                <div class="text-gray-400 font-mono text-xs mb-2">2021 – 2024</div>
+                                <p class="text-gray-400 text-sm">Graduated with strong foundations in software development, data structures, database management, and object-oriented programming.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certifications & Learning -->
+                    <div>
+                        <h3 class="text-2xl font-orbitron text-neon-lime mb-6 flex items-center">
+                            <i class="fas fa-certificate mr-3"></i> Authorized Modules
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Cert Items -->
+                            <div class="cyber-card p-4 rounded border-l-4 border-l-neon-lime flex flex-col justify-center">
+                                <div class="font-bold text-white text-sm mb-1">Microsoft Certified: Azure Fundamentals</div>
+                                <div class="text-xs text-neon-lime font-mono">AZ-900</div>
+                            </div>
+                            <div class="cyber-card p-4 rounded border-l-4 border-l-neon-lime flex flex-col justify-center">
+                                <div class="font-bold text-white text-sm mb-1">Prompt Engineering & ML</div>
+                                <div class="text-xs text-neon-cyan font-mono">Advanced Enterprise Level</div>
+                            </div>
+                            <div class="cyber-card p-4 rounded border-l-4 border-l-neon-lime flex flex-col justify-center">
+                                <div class="font-bold text-white text-sm mb-1">Model Context Protocol (MCP)</div>
+                                <div class="text-xs text-neon-magenta font-mono">JSON-RPC & Tools Architecture</div>
+                            </div>
+                            <div class="cyber-card p-4 rounded border-l-4 border-l-neon-lime flex flex-col justify-center">
+                                <div class="font-bold text-white text-sm mb-1">LangGraph & Agentic AI</div>
+                                <div class="text-xs text-gray-400">Multi-Agent Systems</div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-lg font-orbitron text-neon-cyan mt-8 mb-4 border-b border-gray-700 pb-2">Specialized Subroutines</h4>
+                        <div class="flex flex-wrap gap-2 text-sm font-mono">
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">LangGraph</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-magenta/50 text-neon-magenta rounded">MCP Protocol</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">Quesar++ Vector DB</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">Agent Manager</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">GenWizard WFM</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">Enterprise Orchestrator</span>
+                            <span class="px-3 py-1 bg-neon-panel border border-neon-cyan/50 text-neon-cyan rounded">FastAPI & REST APIs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="w-full">
+                <div class="flex items-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-orbitron font-bold text-white uppercase"><span class="text-neon-lime">04.</span> Capability_Matrix</h2>
+                    <div class="h-px bg-gray-700 flex-grow ml-6"></div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair border-neon-cyan/40">
+                        <i class="fab fa-python text-4xl text-neon-cyan mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">Python</h3>
+                        <p class="text-[10px] font-mono text-neon-cyan mt-1">Core AI Development</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair border-neon-magenta/40">
+                        <i class="fas fa-network-wired text-4xl text-neon-magenta mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">LangGraph & MCP</h3>
+                        <p class="text-[10px] font-mono text-neon-magenta mt-1">Multi-Agent State & RPC</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair border-neon-lime/40">
+                        <i class="fas fa-database text-4xl text-neon-lime mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">Quesar++ Vector DB</h3>
+                        <p class="text-[10px] font-mono text-neon-lime mt-1">RAG & Semantic Search</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair">
+                        <i class="fas fa-robot text-4xl text-neon-cyan mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">Agentic AI</h3>
+                        <p class="text-[10px] font-mono text-gray-400 mt-1">ITSM Audit & RCA Swarms</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair">
+                        <i class="fas fa-brain text-4xl text-neon-magenta mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">LLMs & Prompt Eng.</h3>
+                        <p class="text-[10px] font-mono text-gray-400 mt-1">OpenAI, Claude, Gemini</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair">
+                        <i class="fas fa-bolt text-4xl text-neon-lime mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">FastAPI & REST APIs</h3>
+                        <p class="text-[10px] font-mono text-gray-400 mt-1">Enterprise Integration</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair">
+                        <i class="fas fa-cloud text-4xl text-blue-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">Azure / Cloud</h3>
+                        <p class="text-[10px] font-mono text-gray-400 mt-1">AZ-900, AWS, GCP</p>
+                    </div>
+                    <div class="cyber-card p-6 text-center rounded-lg group cursor-crosshair">
+                        <i class="fas fa-cogs text-4xl text-neon-cyan mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="font-orbitron text-white font-bold tracking-wide">Orchestrator Tools</h3>
+                        <p class="text-[10px] font-mono text-gray-400 mt-1">Agent Manager & GenWizard WFM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="w-full">
+                <div class="flex items-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-orbitron font-bold text-white uppercase"><span class="text-neon-cyan">05.</span> Executed_Protocols</h2>
+                    <div class="h-px bg-gray-700 flex-grow ml-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Project 1 -->
+                    <div class="cyber-card rounded-lg overflow-hidden flex flex-col group cursor-pointer" onclick="showProjectDetails('ITSM Audit Automation')">
+                        <div class="h-48 bg-gray-900 border-b border-neon-cyan/30 relative flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[url('https://placehold.co/600x400/0ff/000?text=ITSM+Audit+Agents')] bg-cover bg-center"></div>
+                            <div class="z-10 font-mono text-neon-cyan text-sm absolute top-4 left-4">> sys.spawn(Ticket_Problem_Change_Agents)</div>
+                            <i class="fas fa-tasks text-5xl text-neon-cyan/50 group-hover:text-neon-cyan transition-colors duration-300"></i>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-orbitron font-bold text-white group-hover:text-neon-cyan transition-colors">AI-Powered ITSM Audit Automation</h3>
+                                <span class="text-neon-lime text-xs font-mono border border-neon-lime/40 px-2 py-1 rounded">100% Automated</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-6 flex-grow">
+                                Designed and developed Ticket, Problem, and Change Audit Agents using Python and LangGraph. Integrated with Agent Manager, GenWizard WFM, and Enterprise Orchestrator to fully automate ITSM audit workflows and data validation.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="text-neon-cyan">#LangGraph</span>
+                                <span class="text-neon-cyan">#MCP Protocol</span>
+                                <span class="text-neon-cyan">#GenWizard WFM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="cyber-card rounded-lg overflow-hidden flex flex-col group cursor-pointer" onclick="showProjectDetails('RCA Agent')">
+                        <div class="h-48 bg-gray-900 border-b border-neon-magenta/30 relative flex items-center justify-center overflow-hidden">
+                             <div class="absolute inset-0 opacity-20 bg-[url('https://placehold.co/600x400/f0f/000?text=RCA+Generation+Agent')] bg-cover bg-center"></div>
+                             <div class="z-10 font-mono text-neon-magenta text-sm absolute top-4 left-4">> sys.rag(Quesar_Vector_DB)</div>
+                            <i class="fas fa-notes-medical text-5xl text-neon-magenta/50 group-hover:text-neon-magenta transition-colors duration-300"></i>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-orbitron font-bold text-white group-hover:text-neon-magenta transition-colors">AI-Powered RCA Generation Agent</h3>
+                                <span class="text-neon-magenta text-xs font-mono border border-neon-magenta/40 px-2 py-1 rounded">RAG + Quesar++</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-6 flex-grow">
+                                Developed an automated Root Cause Analysis agent using RAG and Quesar++ Vector DB to synthesize incident work notes, ticket metadata, affected CIs, and P1/P2 bridge call transcripts into high-fidelity RCA reports.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="text-neon-magenta">#Quesar++ Vector DB</span>
+                                <span class="text-neon-magenta">#Semantic Search</span>
+                                <span class="text-neon-magenta">#Prompt Validation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="cyber-card rounded-lg overflow-hidden flex flex-col group cursor-pointer" onclick="showProjectDetails('Multi-Agent Scheduler')">
+                        <div class="h-48 bg-gray-900 border-b border-neon-lime/30 relative flex items-center justify-center overflow-hidden">
+                             <div class="absolute inset-0 opacity-20 bg-[url('https://placehold.co/600x400/0f0/000?text=Agent+Manager')] bg-cover bg-center"></div>
+                             <div class="z-10 font-mono text-neon-lime text-sm absolute top-4 left-4">> sys.orchestrate(GenWizard_WFM)</div>
+                            <i class="fas fa-sitemap text-5xl text-neon-lime/50 group-hover:text-neon-lime transition-colors duration-300"></i>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-orbitron font-bold text-white group-hover:text-neon-lime transition-colors">Enterprise Multi-Agent Scheduler</h3>
+                                <span class="text-neon-lime text-xs font-mono border border-neon-lime/40 px-2 py-1 rounded">Workflow Engine</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-6 flex-grow">
+                                Architected end-to-end agent workflow scheduling and execution pipelines using Agent Manager and Enterprise Orchestrator to route tasks, validate cross-system data, and execute API actions securely.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="text-neon-lime">#Agent Manager</span>
+                                <span class="text-neon-lime">#FastAPI</span>
+                                <span class="text-neon-lime">#REST APIs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="cyber-card rounded-lg overflow-hidden flex flex-col group cursor-pointer" onclick="showProjectDetails('Hallucination Guardrails')">
+                        <div class="h-48 bg-gray-900 border-b border-neon-cyan/30 relative flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[url('https://placehold.co/600x400/0ff/000?text=Guardrails+Engine')] bg-cover bg-center"></div>
+                            <div class="z-10 font-mono text-neon-cyan text-sm absolute top-4 left-4">> sys.validate(Response_Quality)</div>
+                            <i class="fas fa-shield-alt text-5xl text-neon-cyan/50 group-hover:text-neon-cyan transition-colors duration-300"></i>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-orbitron font-bold text-white group-hover:text-neon-cyan transition-colors">Contextual RAG & Hallucination Guardrails</h3>
+                                <span class="text-neon-cyan text-xs font-mono border border-neon-cyan/40 px-2 py-1 rounded">Enterprise Quality</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-6 flex-grow">
+                                Implemented prompt engineering techniques, embeddings validation, and hallucination mitigation guardrails to ensure LLM generated output across ITSM operational pipelines meets enterprise reliability standards.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="text-neon-cyan">#Embeddings</span>
+                                <span class="text-neon-cyan">#Hallucination Mitigation</span>
+                                <span class="text-neon-cyan">#Semantic Retrieval</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="w-full text-center max-w-3xl mx-auto">
+                <div class="inline-block px-3 py-1 mb-6 border border-neon-magenta text-neon-magenta text-xs font-orbitron tracking-widest rounded-full uppercase bg-neon-magenta/10">
+                    Awaiting Input // Connect with Ramesh Roy
+                </div>
+                <h2 class="text-4xl md:text-6xl font-orbitron font-bold text-white mb-6 uppercase">Initialize <span class="text-neon-magenta">Handshake</span></h2>
+                <p class="text-gray-400 text-lg mb-10 font-light">
+                    Interested in discussing enterprise Agentic AI architectures, LangGraph workflows, Model Context Protocol (MCP), or ITSM automation solutions? Reach out directly.
+                </p>
+
+                <a href="mailto:rameshroy.ai@gmail.com" class="inline-block px-10 py-4 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-orbitron font-bold tracking-widest text-lg mb-12">
+                    SEND_MESSAGE()
+                </a>
+
+                <div class="flex justify-center space-x-8">
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-neon-cyan hover:scale-110 hover:drop-shadow-[0_0_10px_#0ff] transition-all duration-300" aria-label="GitHub">
+                        <i class="fab fa-github text-4xl"></i>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-neon-cyan hover:scale-110 hover:drop-shadow-[0_0_10px_#0ff] transition-all duration-300" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin text-4xl"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-neon-cyan/20 bg-black/50 backdrop-blur-sm py-6 mt-10 text-center font-mono text-sm text-gray-500 z-10 relative">
+        <p>© 2026 Ramesh Roy — Agentic AI Engineer. Accenture.</p>
+        <p class="mt-2 text-xs">System Status: <span class="text-neon-lime">ONLINE</span> | MCP Protocol & LangGraph: <span class="text-neon-cyan font-bold">READY</span></p>
+    </footer>
+
+    <!-- Interactive Alert Modal -->
+    <div id="cyber-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="cyber-card max-w-lg w-full m-4 p-8 border border-neon-cyan shadow-neon-cyan transform scale-95 transition-transform duration-300" id="cyber-modal-content">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="font-orbitron text-2xl text-neon-cyan font-bold" id="modal-title">System Alert</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="font-mono text-gray-300 space-y-4 text-sm" id="modal-body">
+                > Executing query...
+                <br>> Data retrieved successfully.
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black transition-colors font-orbitron text-sm font-bold">
+                    ACKNOWLEDGE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-Agent Collaborative Swarm Execution Data
+        const agentSwarmNodes = [
+            {
+                id: 'router',
+                name: 'Supervisor Agent',
+                role: 'LangGraph State Router',
+                icon: 'fa-network-wired',
+                color: 'cyan',
+                action: 'Ingest Ticket & Route Sub-Tasks',
+                detail: 'Ingesting ITSM Ticket #INC-9042. Parsing error logs and delegating tasks to multi-agent swarm.',
+                output: 'Delegated parallel sub-tasks to Context & Audit Agents',
+                status: 'ROUTING'
+            },
+            {
+                id: 'rag',
+                name: 'RAG Context Agent',
+                role: 'Quesar++ Vector Search',
+                icon: 'fa-database',
+                color: 'magenta',
+                action: 'Semantic Vector Retrieval',
+                detail: 'Searching vector database for high-confidence root cause embeddings and historical fix patterns.',
+                output: 'Retrieved 3 matching KB articles & historical RCA pattern',
+                status: 'RETRIEVING'
+            },
+            {
+                id: 'audit',
+                name: 'ITSM Audit Agent',
+                role: 'GenWizard WFM Checker',
+                icon: 'fa-shield-alt',
+                color: 'lime',
+                action: 'Validate Compliance & Schedule',
+                detail: 'Checking change window boundaries, team shift schedules, and audit compliance metrics.',
+                output: 'Compliance verified: Approved within Maintenance Window',
+                status: 'AUDITING'
+            },
+            {
+                id: 'guardrail',
+                name: 'Guardrail Agent',
+                role: 'Hallucination Mitigation',
+                icon: 'fa-user-shield',
+                color: 'cyan',
+                action: 'Verify Anti-Hallucination Guardrails',
+                detail: 'Running anti-hallucination checks, payload schema validation, and risk score computation.',
+                output: 'Risk Score: 0.02 (Safe). Plan approved for execution.',
+                status: 'VALIDATING'
+            },
+            {
+                id: 'executor',
+                name: 'Execution Agent',
+                role: 'Enterprise Orchestrator',
+                icon: 'fa-bolt',
+                color: 'lime',
+                action: 'Dispatch API & Auto-Remediate',
+                detail: 'Executing automated restart script via Enterprise Orchestrator and closing audit ticket.',
+                output: 'Service restored in 1.4s. RCA report posted.',
+                status: 'EXECUTING'
+            }
+        ];
+
+        let currentAgentIndex = 0;
+        let isAgentPlaying = true;
+        let agentTimer = null;
+
+        function renderAgentSwarm() {
+            const container = document.getElementById('swarm-grid-container');
+            const streamContainer = document.getElementById('agent-stream-container');
+            if (!container) return;
+
+            container.innerHTML = agentSwarmNodes.map((node, idx) => {
+                const isActive = idx === currentAgentIndex;
+                const isCompleted = idx < currentAgentIndex;
+                
+                let borderClass = 'border-gray-800 opacity-60';
+                let statusBadge = `<span class="text-[8px] text-gray-500 font-mono">IDLE</span>`;
+
+                if (isActive) {
+                    borderClass = 'border-neon-cyan shadow-[0_0_12px_rgba(0,255,255,0.4)] opacity-100 bg-neon-cyan/10 scale-[1.02]';
+                    statusBadge = `<span class="text-[8px] text-neon-lime font-mono font-bold animate-pulse">● ACTIVE</span>`;
+                } else if (isCompleted) {
+                    borderClass = 'border-neon-lime/50 opacity-90 bg-neon-lime/5';
+                    statusBadge = `<span class="text-[8px] text-neon-lime font-mono"><i class="fas fa-check"></i> DONE</span>`;
+                }
+
+                return `
+                    <div onclick="jumpAgentStep(${idx})" class="p-2.5 rounded-lg border ${borderClass} transition-all duration-300 cursor-pointer flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas ${node.icon} text-neon-${node.color} text-sm"></i>
+                                <span class="font-orbitron font-bold text-xs text-white">${node.name}</span>
+                            </div>
+                            ${statusBadge}
+                        </div>
+                        <div class="text-[9px] font-mono text-gray-400 mt-1 truncate">${node.role}</div>
+                    </div>
+                `;
+            }).join('');
+
+            const activeNode = agentSwarmNodes[currentAgentIndex];
+            document.getElementById('agent-active-title').innerText = activeNode.name + ' (' + activeNode.role + ')';
+            document.getElementById('agent-active-step').innerText = `STEP ${currentAgentIndex + 1} OF ${agentSwarmNodes.length}`;
+            document.getElementById('agent-active-detail').innerText = activeNode.detail;
+            document.getElementById('agent-active-output').innerText = 'Output: ' + activeNode.output;
+
+            const progressPct = Math.round(((currentAgentIndex + 1) / agentSwarmNodes.length) * 100);
+            document.getElementById('agent-step-counter').innerText = `PROGRESS: ${progressPct}%`;
+
+            if (streamContainer) {
+                streamContainer.innerHTML = agentSwarmNodes.map((node, idx) => {
+                    const isActive = idx === currentAgentIndex;
+                    const isCompleted = idx <= currentAgentIndex;
+                    return `
+                        <div class="p-2 rounded border ${isActive ? 'border-neon-cyan bg-neon-cyan/10 text-white' : isCompleted ? 'border-gray-800 text-gray-300' : 'border-gray-900 text-gray-600'} flex items-start space-x-2">
+                            <span class="font-bold text-neon-cyan">[STEP ${idx + 1}]</span>
+                            <div class="flex-1">
+                                <div class="font-bold">${node.name} &rarr; <span class="text-neon-lime">${node.action}</span></div>
+                                <div class="text-[9px] text-gray-400">${node.detail}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function nextAgentStep() {
+            currentAgentIndex = (currentAgentIndex + 1) % agentSwarmNodes.length;
+            renderAgentSwarm();
+        }
+
+        function stepAgentNext() {
+            pauseAgent();
+            nextAgentStep();
+        }
+
+        function jumpAgentStep(idx) {
+            pauseAgent();
+            currentAgentIndex = idx;
+            renderAgentSwarm();
+        }
+
+        function resetAgentSwarm() {
+            pauseAgent();
+            currentAgentIndex = 0;
+            renderAgentSwarm();
+            playAgent();
+        }
+
+        function toggleAgentPlay() {
+            if (isAgentPlaying) {
+                pauseAgent();
+            } else {
+                playAgent();
+            }
+        }
+
+        function playAgent() {
+            isAgentPlaying = true;
+            document.getElementById('agent-play-icon').className = 'fas fa-pause';
+            document.getElementById('agent-play-text').innerText = 'PAUSE';
+            clearInterval(agentTimer);
+            agentTimer = setInterval(nextAgentStep, 2000);
+        }
+
+        function pauseAgent() {
+            isAgentPlaying = false;
+            document.getElementById('agent-play-icon').className = 'fas fa-play';
+            document.getElementById('agent-play-text').innerText = 'PLAY';
+            clearInterval(agentTimer);
+        }
+
+        function switchAgentTab(tab) {
+            const swarmTab = document.getElementById('agent-tab-swarm');
+            const streamTab = document.getElementById('agent-tab-stream');
+            const btnSwarm = document.getElementById('tab-btn-swarm');
+            const btnStream = document.getElementById('tab-btn-stream');
+
+            if (tab === 'swarm') {
+                swarmTab.classList.remove('hidden');
+                streamTab.classList.add('hidden');
+                btnSwarm.className = 'px-2.5 py-1 rounded bg-neon-cyan text-black font-bold transition-all';
+                btnStream.className = 'px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all';
+                playAgent();
+            } else {
+                swarmTab.classList.add('hidden');
+                streamTab.classList.remove('hidden');
+                btnStream.className = 'px-2.5 py-1 rounded bg-neon-cyan text-black font-bold transition-all';
+                btnSwarm.className = 'px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all';
+            }
+        }
+
+        // Model Context Protocol (MCP) Sequence Engine Controller
+        let currentMcpStep = 1;
+        let isMcpPlaying = true;
+        let mcpTimer = null;
+        const totalMcpSteps = 4;
+
+        function renderMcpStep() {
+            for (let i = 1; i <= totalMcpSteps; i++) {
+                const el = document.getElementById(`mcp-step-${i}`);
+                if (el) {
+                    if (i === currentMcpStep) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            }
+            const counter = document.getElementById('mcp-step-counter');
+            if (counter) counter.innerText = `${currentMcpStep} OF ${totalMcpSteps}`;
+        }
+
+        function nextMcpStep() {
+            currentMcpStep = (currentMcpStep % totalMcpSteps) + 1;
+            renderMcpStep();
+        }
+
+        function stepMcpNext() {
+            pauseMcp();
+            nextMcpStep();
+        }
+
+        function toggleMcpPlay() {
+            if (isMcpPlaying) {
+                pauseMcp();
+            } else {
+                playMcp();
+            }
+        }
+
+        function playMcp() {
+            isMcpPlaying = true;
+            document.getElementById('mcp-play-icon').className = 'fas fa-pause';
+            document.getElementById('mcp-play-text').innerText = 'PAUSE MCP SEQUENCE';
+            clearInterval(mcpTimer);
+            mcpTimer = setInterval(nextMcpStep, 2200);
+        }
+
+        function pauseMcp() {
+            isMcpPlaying = false;
+            document.getElementById('mcp-play-icon').className = 'fas fa-play';
+            document.getElementById('mcp-play-text').innerText = 'PLAY MCP SEQUENCE';
+            clearInterval(mcpTimer);
+        }
+
+        // Project Detail Modal Handler
+        function showProjectDetails(projectName) {
+            const modal = document.getElementById('cyber-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+
+            if (projectName === 'ITSM Audit Automation') {
+                title.innerText = 'AI-Powered ITSM Audit Automation';
+                title.className = 'font-orbitron text-xl text-neon-cyan font-bold';
+                body.innerHTML = `
+                    <div class="space-y-2 text-xs">
+                        <p class="text-neon-lime font-bold">> STATUS: 100% MANUAL AUDIT TASKS AUTOMATED</p>
+                        <p>> Designed Ticket, Problem, and Change Audit Agents using Python, LangGraph, and MCP protocol.</p>
+                        <p>> Scheduled and executed workflows via <b>Agent Manager</b>, <b>GenWizard WFM</b>, and enterprise <b>Orchestrator</b>.</p>
+                        <p>> Integrated multiple ITSM APIs for context-aware validation, reducing audit turnaround time to seconds.</p>
+                    </div>
+                `;
+            } else if (projectName === 'RCA Agent') {
+                title.innerText = 'AI-Powered Root Cause Analysis (RCA)';
+                title.className = 'font-orbitron text-xl text-neon-magenta font-bold';
+                body.innerHTML = `
+                    <div class="space-y-2 text-xs">
+                        <p class="text-neon-magenta font-bold">> RAG + QUESAR++ VECTOR DB ARCHITECTURE</p>
+                        <p>> Synthesizes incident work notes, ticket metadata, CIs, and P1/P2 bridge-call transcripts into standardized RCA reports.</p>
+                        <p>> Utilizes <b>Quesar++ Vector Database</b> for high-accuracy semantic search.</p>
+                        <p>> Implements response validation and hallucination mitigation guardrails.</p>
+                    </div>
+                `;
+            } else if (projectName === 'Multi-Agent Scheduler') {
+                title.innerText = 'Enterprise Multi-Agent Scheduler';
+                title.className = 'font-orbitron text-xl text-neon-lime font-bold';
+                body.innerHTML = `
+                    <div class="space-y-2 text-xs">
+                        <p class="text-neon-lime font-bold">> ORCHESTRATION PIPELINE ACTIVE</p>
+                        <p>> Automated agent lifecycle management using Agent Manager & GenWizard WFM.</p>
+                        <p>> Secure FastAPI endpoints enabling seamless enterprise data source connectivity.</p>
+                        <p>> Multi-agent state monitoring with real-time exception handling.</p>
+                    </div>
+                `;
+            } else if (projectName === 'Hallucination Guardrails') {
+                title.innerText = 'Contextual RAG & Guardrails';
+                title.className = 'font-orbitron text-xl text-neon-cyan font-bold';
+                body.innerHTML = `
+                    <div class="space-y-2 text-xs">
+                        <p class="text-neon-cyan font-bold">> RELIABILITY ENGINE: ONLINE</p>
+                        <p>> Embeddings verification & semantic retrieval filtering.</p>
+                        <p>> Enterprise prompt engineering patterns for zero-hallucination compliance.</p>
+                        <p>> Strict input/output structure validation layer.</p>
+                    </div>
+                `;
+            } else {
+                title.innerText = projectName;
+                body.innerHTML = `> Querying protocol details for ${projectName}... Data retrieved successfully.`;
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('cyber-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Theme Toggle Controller
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+        const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+        const mobileThemeText = document.getElementById('mobile-theme-text');
+
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light-theme');
+            if (isLight) {
+                if (themeIcon) themeIcon.className = 'fas fa-sun text-amber-500';
+                if (themeText) themeText.innerText = 'SYS.LIGHT';
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun text-amber-500';
+                if (mobileThemeText) mobileThemeText.innerText = 'MODE: LIGHT';
+            } else {
+                if (themeIcon) themeIcon.className = 'fas fa-moon text-neon-cyan';
+                if (themeText) themeText.innerText = 'SYS.DARK';
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon text-neon-cyan';
+                if (mobileThemeText) mobileThemeText.innerText = 'MODE: DARK';
+            }
+        }
+
+        if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+        if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleTheme);
+
+        // Mobile Menu Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('flex');
+            });
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                });
+            });
+        }
+
+        // Initialize Orchestration Engine & MCP Sequence on page load
+        window.addEventListener('load', () => {
+            renderAgentSwarm();
+            playAgent();
+            renderMcpStep();
+            playMcp();
+        });
+    </script>
+</body>
+</html>
